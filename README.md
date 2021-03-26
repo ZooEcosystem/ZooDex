@@ -1,2 +1,2 @@
 # ZooDex
-DEX running for sushiswap within Fantom network
+DEX for Fantom network

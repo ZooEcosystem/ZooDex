@@ -69,6 +69,7 @@ contract ZooDexPairProviderV0 is Ownable{
     address[] listedPairs;
     
     event pairAdded(address pair, address token1, address token2);
+    event pairRemoved(address pair);
     
     mapping(address => Pair) tradingPairs;
     
@@ -106,5 +107,10 @@ contract ZooDexPairProviderV0 is Ownable{
         return tradingPairs[_pair].exchange;
     }
     
+    function removePairFromDex(address _pair) public onlyOwner {
+        require(tradingPairs[_pair].exists,"Already removed");
+        tradingPairs[_pair].exists = false;
+        emit pairRemoved(_pair);
+    }
     
 }

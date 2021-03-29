@@ -66,6 +66,10 @@ abstract contract Ownable is Context {
 
 contract ZooDexPairProviderV0 is Ownable{
     
+    address[] listedPairs;
+    
+    event pairAdded(address pair, address token1, address token2);
+    
     mapping(address => Pair) tradingPairs;
     
     struct Pair{
@@ -75,9 +79,12 @@ contract ZooDexPairProviderV0 is Ownable{
     }
     
     function listPairOnDex(address _pair, address _token1, address _token2) public onlyOwner {
+        require(!tradingPairs[_pair].exists,"Already exists");
         tradingPairs[_pair]._token1 = _token1;
         tradingPairs[_pair]._token2 = _token2;
         tradingPairs[_pair].exists = true; 
+        listedPairs.push(_pair);
+        emit pairAdded(_pair,_token1,_token2);
     }
     
     function isListedOnDex(address _pair) public view returns(bool){
@@ -87,6 +94,10 @@ contract ZooDexPairProviderV0 is Ownable{
     
     function getCoinsInPair(address _pair) public view returns(address, address){
         return (tradingPairs[_pair]._token1, tradingPairs[_pair]._token2);
+    }
+    
+    function getAllListedPairs() public view returns(address[] memory){
+        return listedPairs;
     }
     
     

@@ -76,13 +76,15 @@ contract ZooDexPairProviderV0 is Ownable{
         address _token1;
         address _token2;
         bool exists;
+        string exchange;
     }
     
-    function listPairOnDex(address _pair, address _token1, address _token2) public onlyOwner {
+    function listPairOnDex(address _pair, address _token1, address _token2, string memory _exchange) public onlyOwner {
         require(!tradingPairs[_pair].exists,"Already exists");
         tradingPairs[_pair]._token1 = _token1;
         tradingPairs[_pair]._token2 = _token2;
-        tradingPairs[_pair].exists = true; 
+        tradingPairs[_pair].exists = true;
+        tradingPairs[_pair].exchange = _exchange;
         listedPairs.push(_pair);
         emit pairAdded(_pair,_token1,_token2);
     }
@@ -98,6 +100,10 @@ contract ZooDexPairProviderV0 is Ownable{
     
     function getAllListedPairs() public view returns(address[] memory){
         return listedPairs;
+    }
+    
+    function getExchangeOfPair(address _pair) public view returns(string memory){
+        return tradingPairs[_pair].exchange;
     }
     
     
